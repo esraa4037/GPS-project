@@ -6,26 +6,6 @@ double degToRad(double deg) {
   return deg * PI / 180;
 }
 
-double semiSwapLatitude (){
-    /// this function replace the second point with the first
-    latiude1 = latitude2;
-    return latitude1;
-
-}
-double semiSwapLatitude (){
-    /// this function replace the second point with the first
-    latiude1 = latitude2;
-    return latitude1;
-
-}
-double gitLatitude(){
-
-}
-
-double gitLongitude(){
-
-}
-
 ////////// this function calulate the distance between two GPS points /////////////
 double distance(double latitude1, double longitude1, double latitude2 ,double longitude2) {
 
@@ -34,22 +14,56 @@ double distance(double latitude1, double longitude1, double latitude2 ,double lo
   double c = 2 * atan2(sqrt(a),sqrt(1-a));
   return 6371 * c;
 }
+
+
 int main () {
 
-////////////////// calculate the total distance ////////////
-int total_distance = 0;
-
-		while (GPIO_PORTF_DATA_R & 0x00000001 != 0)
+    ////////////////// calculate the total distance ////////////
+    int total_distance = 0;
+    char start[] = read();     //To read the start point of the jurney {latitude1 , longitude1}
+    int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1};
+    while (GPIO_PORTF_DATA_R & 0x00000001 != 0)
         {
-            total_distance += distance(gitLatitude, gitLongitude,  );
+            string end = read();
+            int second_point[1] = parse(end);  //int second_point[1] = {lat2, lon2};
+            total_distance += distance(startPoin[0], startPoin[1],
+                                       second_point[0], second_point[1] ); // increment the total distance
+
+            // Let the second point to be the first point in the next cycle of the loop
+            startPoin[0] = second_point[0];
+            startPoin[1] = second_point[1];
+            delay();
         }
 
-//    x = 45.0;
-//    val = PI / 180;
-//    ret = sin(x*val);
-   distance(0,0,0,0);
-  // printf(" %lf ", sine(90));
    
    return(0);
-	
 }
+
+
+
+////////////These functions will be implemented in the second milestone /////////
+/////////////////////////////////////////////////////////////////////////////////
+/*
+ *
+ // A function reads from gps
+char* read(){
+  string d="";
+  //////
+  //////
+  }
+  return d;
+  }
+
+
+ //this function takes the string from function read()
+ //and then return langitude and longitude in int array (size: 2)
+  int * parse(string s){
+  ///////
+  ///////
+  return arr;
+    }
+
+
+
+
+*/
