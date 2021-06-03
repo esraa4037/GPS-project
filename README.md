@@ -1,2 +1,2 @@
-# GPS-project
-A simple GPS to calculate the total distance between the start point and the destination
+# GPS project
+A simple GPS project to calculate the total distance between the start point and the destination
