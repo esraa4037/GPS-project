@@ -28,12 +28,14 @@ int main () {
             int second_point[1] = parse(end);  //int second_point[1] = {lat2, lon2};
             total_distance += distance(startPoin[0], startPoin[1],
                                        second_point[0], second_point[1] ); // increment the total distance
+	    print(total_distance);//to display distance in 7 segment
 
             // Let the second point to be the first point in the next cycle of the loop
             startPoin[0] = second_point[0];
             startPoin[1] = second_point[1];
             delay();
         }
+	
 
    
    return(0);
