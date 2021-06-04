@@ -65,17 +65,17 @@ void print(int distance){
 	
 	while(1){
 		GPIO_PORTD_DATA_R = mask1;
-		GPIO_PORTE_DATA_R &= ~0x07;
+		GPIO_PORTE_DATA_R &= ~0x0f;
 		GPIO_PORTE_DATA_R |= 0x01;
 		delay();
 		
 		GPIO_PORTD_DATA_R = mask2;
-		GPIO_PORTE_DATA_R &= ~0x07;
+		GPIO_PORTE_DATA_R &= ~0x0f;
 		GPIO_PORTE_DATA_R |= 0x02;
 		delay();
 		
 		GPIO_PORTD_DATA_R = mask3;
-		GPIO_PORTE_DATA_R &= ~0x07;
+		GPIO_PORTE_DATA_R &= ~0x0f;
 		GPIO_PORTE_DATA_R |= 0x04;
 		delay();
 	}
