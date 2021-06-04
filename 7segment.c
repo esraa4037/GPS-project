@@ -86,10 +86,6 @@ void SystemInit(){}
 
 
 int main(){
-Rled_Init();	
-Sw2_Init();
-PortD_Init();
-PortE_Init();	
-print(185);
+
 	
 }
