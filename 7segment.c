@@ -1,36 +1,36 @@
 
 #include "tm4c123gh6pm.h"
 unsigned int mask(unsigned int no){
-	unsigned int x;
+unsigned int x;
 	if(no == 0){
-		x = 0x3f;
+		x = 0xc0;
 	}
 	else if(no == 1){
-		x = 0x06;
+		x = 249;
 	}
 	else if(no == 2){
-		x = 0x5b;
+		x = 164;
 	}
 	else if(no == 3){
-		x = 0x4f;
+		x = 176;
 	}
 	else if(no == 4){
-		x = 0x66;
+		x = 153;
 	}
 	else if(no == 5){
-		x = 0x6d;
+		x = 146;
 	}
 	else if(no == 6){
-		x = 0x7d;
+		x = 130;
 	}
 	else if(no == 7){
-		x = 0x07;
+		x = 248;
 	}
 	else if(no == 8){
-		x = 0x7f;
+		x = 128;
 	}
 	else if(no == 9){
-		x = 0x6f;
+		x = 246;
 	}					
 	return x;
 }
