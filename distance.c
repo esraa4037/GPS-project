@@ -38,7 +38,7 @@ void total_distance(){
 
 
 int main () {
-	 total_distance();
+	 total_distance();  // this will invoke the print() function and led()
    return(0);
 }
 
