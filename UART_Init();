@@ -1,0 +1,15 @@
+void UART_Init(void){          //should be called only once
+	SYSCTL_RCGCUART_R |= 0x0001;  //activate UART0
+	SYSCTL_RCGCGPIO_R |= 0x0001;   //activate port A
+	UART0_CTL_R &=~ 0x0001; //disable UART
+  UART0_IBRD_R =0x08;  //IBRD= int (16000000/(16*115200))=0.68
+	UART0_FBRD_R =0x2C; //FBRD = int(0.68*64+0.5)
+	UART0_LCRH_R= 0x0070; //8-bits word length,enable fifo 001110000
+  UART0_CTL_R =	0x0301; //enable RXE,TXE and UART 001100000001
+	
+	
+  GPIO_PORTA_AFSEL_R |= 0x03;   //ENABLE ALTERNATE FUNCTION PA0,PA1
+  GPIO_PORTA_PCTL_R =(GPIO_PORTA_PCTL_R&0xFFFFFF00)+0x00000011;   //CONFIGURE UART FOR PA0,PA1
+  GPIO_PORTA_DEN_R |= 0x03;   //enable digital i/o for PA0,PA1
+  GPIO_PORTA_AMSEL_R &=~0x03;   //disable analog i/o for PA0,PA1
+}
