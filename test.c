@@ -1,6 +1,6 @@
 #include "Init.h"
 #include "tm4c123gh6pm.h"
-
+#define PI 3.14159265
 void PortB_Init(){
 SYSCTL_RCGCGPIO_R |=0x2;
 while((SYSCTL_PRGPIO_R & 0x2)==0);
@@ -147,6 +147,40 @@ void print(int distance){
 	}
 	
 }
+double degToRad(double deg) {
+  return deg * PI / 180;
+}
+
+////////// this function calulate the distance between two GPS points /////////////
+double distance(double latitude1, double longitude1, double latitude2 ,double longitude2) {
+
+  double a =  pow(sin(degToRad(latitude2-latitude1)/2),2)+
+	  pow(sin(degToRad(longitude2-longitude1)/2),2) * cos(degToRad(latitude2) )* cos(degToRad(latitude1)); 
+  double c = 2 * atan2(sqrt(a),sqrt(1-a));
+  return 6371 * c;
+}
+////////////////// calculate the total distance ////////////
+void total_distance(){
+    double total_distance = 0;
+    char start[] = read();     //To read the start point of the jurney {latitude1 , longitude1}, read() will be implemented in second milestone
+    int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1}, parse() will be implemented in second milestone
+    while (GPIO_PORTF_DATA_R & 0x00000001 != 0)
+        {
+            string end = read();
+            int second_point[1] = parse(end);  //int second_point[1] = {lat2, lon2};
+            total_distance += distance(startPoin[0], startPoin[1],
+                                       second_point[0], second_point[1] ); // increment the total distance
+	    print((int)total_distance);//to display the distance in 7 segment during the movement
+	    led(total_distance);// if total_distance>=100, the red led turns on
+
+            // Let the second point to be the first point in the next cycle of the loop
+            startPoin[0] = second_point[0];
+            startPoin[1] = second_point[1];
+            delay();
+        }
+
+}
+
 
 void SystemInit(){}
 
@@ -158,4 +192,5 @@ int main(){
         Rled_Init();
 	led(100);
 	print(120);
+	//total_distance() will be called in second milestone
 }
