@@ -2,17 +2,17 @@
 #include "Init.h"
 
 
-void PortD_Init(){
-SYSCTL_RCGCGPIO_R |=0x8;
-while((SYSCTL_PRGPIO_R & 0x8)==0);
-GPIO_PORTD_LOCK_R =	Lock_key;
-GPIO_PORTD_CR_R =PD_mask ;
-GPIO_PORTD_DIR_R =PD_mask;
-GPIO_PORTD_DEN_R =PD_mask;
-GPIO_PORTD_AMSEL_R &=~ PD_mask;
-GPIO_PORTD_AFSEL_R &=~ PD_mask;
-GPIO_PORTD_PCTL_R &=~ 0xffffffff;
-GPIO_PORTD_DATA_R &=~ PD_mask; 	
+void PortB_Init(){
+SYSCTL_RCGCGPIO_R |=0x2;
+while((SYSCTL_PRGPIO_R & 0x2)==0);
+GPIO_PORTB_LOCK_R =	Lock_key;
+GPIO_PORTB_CR_R =PB_mask ;
+GPIO_PORTB_DIR_R =PB_mask;
+GPIO_PORTB_DEN_R =PB_mask;
+GPIO_PORTB_AMSEL_R &=~ PB_mask;
+GPIO_PORTB_AFSEL_R &=~ PB_mask;
+GPIO_PORTB_PCTL_R &=~ 0xffffffff;
+GPIO_PORTB_DATA_R &=~ PB_mask; 	
 	
 }
 
@@ -61,7 +61,7 @@ void SystemInit(){}
 int main(){
 Rled_Init();	
 Sw2_Init();
-PortD_Init();
+PortB_Init();
 PortE_Init();	
 
 	
