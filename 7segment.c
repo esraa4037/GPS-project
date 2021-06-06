@@ -51,17 +51,21 @@ unsigned int mask2;
 unsigned int mask3;
 
 void print(int distance){
-	 digit1 = distance/100;
+	if(distance >= 100 && distance <1000){
+	digit1 = distance/100;
 	distance %= 100;
-	
-	 digit2 = distance/10;
+	mask1 = mask(digit1);
+
+	}
+	if(distance >= 10){
+	digit2 = distance/10;
 	distance %= 10;
+	mask2 = mask(digit2);
+
+	}
 
 	digit3 = distance;
-	
-	 mask1 = mask(digit1);
-	 mask2 = mask(digit2);
-	 mask3 = mask(digit3);
+	mask3 = mask(digit3);
 	
 	while(1){
 		GPIO_PORTB_DATA_R = mask1;
