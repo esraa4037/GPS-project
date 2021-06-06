@@ -2,8 +2,8 @@ void UART_Init(void){                                                   //should
 	SYSCTL_RCGCUART_R |= 0x0004;                                    //activate UART2
 	SYSCTL_RCGCGPIO_R |= 0x0008;                                    //activate port D
 	UART2_CTL_R &=~ 0x0001;                                         //disable UART
-        UART2_IBRD_R =0x08;                                             //IBRD= int (16000000/(16*115200))=8.68
-	UART2_FBRD_R =0x2C;                                             //FBRD = int(0.68*64+0.5) =44 
+        UART2_IBRD_R =104;                                             //IBRD= int (16000000/(16*9600))=104
+	UART2_FBRD_R =11;                                             //FBRD = int(0.1667*64+0.5) =11
 	UART2_LCRH_R= 0x0070;                                           //8-bits word length,enable fifo 001110000
         UART2_CTL_R =0x0301;                                            //enable RXE,TXE and UART 001100000001
 	
