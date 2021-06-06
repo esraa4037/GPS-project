@@ -112,7 +112,7 @@ unsigned int mask2;
 unsigned int mask3;
 
 void print(int distance){
-	if(distance >= 100){
+	if(distance >= 100 && distance <1000){
 	 digit1 = distance/100;
 	distance %= 100;
 	mask1 = mask(digit1);
