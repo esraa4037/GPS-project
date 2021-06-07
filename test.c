@@ -161,6 +161,7 @@ double distance(double latitude1, double longitude1, double latitude2 ,double lo
 }
 ////////////////// calculate the total distance ////////////
 void total_distance(){
+    delay();//delay for GPS fix
     double total_distance = 0;
     char start[] = read();     //To read the start point of the jurney {latitude1 , longitude1}, read() will be implemented in second milestone
     int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1}, parse() will be implemented in second milestone
