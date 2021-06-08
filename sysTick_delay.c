@@ -1,18 +1,3 @@
-// control and status register
-// reload register
-// current value register
-
-
-// Enable = 0;
-// reload value = the number of counts;    Sys_Tick_LOAD   // 24-bit
-
-// Sys_Tick_VAL = 0;    // that clears the current register and clears the count flag  // READ ONLY  // 24-bit
-           //we can also type any value
-// Enable = 1;
-// clock source = 1;
-
-
-
 void SystemInit() {}
 
 void portF_init(void) {
@@ -31,6 +16,7 @@ void portF_init(void) {
 }
 
 // initialization for systick timer
+/*
 void sysTick_init()
 {
     NVIC_ST_CTRL_R = 0;  //DISABLE TIMER
@@ -39,6 +25,8 @@ void sysTick_init()
     NVIC_ST_CTRL_R = 5;  // set the enable and clock source to 1
 
 }
+*/
+
 
 // this function makes a delay in seconds
 //it takes the number of seconds and number of counts that makes a one second delay(about 16,000,000 counts)
@@ -65,7 +53,7 @@ int main()
     portF_init();
     sysTick_init();
     while(1){
-        GPIO_PORTF_DATA_R |= 0x02;
+        GPIO_PORTF_DATA_R ^= 0x02;
         delay_in_seconds(5, 16000000);
     }
 }
