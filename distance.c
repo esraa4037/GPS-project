@@ -22,7 +22,7 @@ int main () {
     int total_distance = 0;
     char start[] = read();     //To read the start point of the jurney {latitude1 , longitude1}
     int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1};
-    while (GPIO_PORTF_DATA_R & 0x00000001 != 0)
+    while ( (GPIO_PORTF_DATA_R & 0x01) != 0)
         {
             string end = read();
             int second_point[1] = parse(end);  //int second_point[1] = {lat2, lon2};
