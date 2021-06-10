@@ -30,7 +30,7 @@ void one_second_delay()
 
 // this function makes a delay in seconds
 //it takes the number of seconds and number of counts that makes a one second delay(about 16,000,000 counts)
-void delay_in_seconds(int seconds, uint32_t counts)
+void delay_in_seconds(int seconds)
 {
     int i;
     for (i=0; i<seconds; i++){
