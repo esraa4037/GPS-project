@@ -1,0 +1,500 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include "tm4c123gh6pm.h"
+#include "tm4c123.h"
+#include "Init.h"
+#define MAX 200
+#define PI 3.14159265
+
+#define GPIO_PA10_M 0x03
+
+void UART0_Init(void){
+	SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R0;
+	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R0;
+	
+	UART0_CTL_R &= ~UART_CTL_UARTEN;
+	UART0_IBRD_R = 520;    
+  UART0_FBRD_R = 53;
+	UART0_LCRH_R = (UART_LCRH_WLEN_8 | UART_LCRH_FEN);
+	UART0_CTL_R |= (UART_CTL_RXE | UART_CTL_TXE | UART_CTL_UARTEN);
+	
+	GPIO_PORTA_AFSEL_R |= GPIO_PA10_M;
+	GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFFFFFF00) | (GPIO_PCTL_PA1_U0TX | GPIO_PCTL_PA0_U0RX);
+	GPIO_PORTA_DEN_R |= GPIO_PA10_M;
+}
+
+int UART0_Available(void){
+	return ((UART0_FR_R&UART_FR_RXFE) == UART_FR_RXFE) ? 0 : 1;
+}
+
+uint8_t UART0_Read(void){
+	while(UART0_Available() != 1);
+	return (uint8_t)(UART0_DR_R&0xFF);
+}
+
+void UART0_Write(uint8_t data){
+	while((UART0_FR_R&UART_FR_TXFF) != 0);
+	UART0_DR_R = data;
+}
+
+
+
+void PortB_Init(){
+SYSCTL_RCGCGPIO_R |=0x2;
+while((SYSCTL_PRGPIO_R & 0x2)==0);
+GPIO_PORTB_LOCK_R =	Lock_key;
+GPIO_PORTB_CR_R =PB_mask ;
+GPIO_PORTB_DIR_R =PB_mask;
+GPIO_PORTB_DEN_R =PB_mask;
+GPIO_PORTB_AMSEL_R &=~ PB_mask;
+GPIO_PORTB_AFSEL_R &=~ PB_mask;
+GPIO_PORTB_PCTL_R &=~ 0xffffffff;
+GPIO_PORTB_DATA_R &=~ PB_mask; 	
+	
+}
+
+void PortE_Init(){
+SYSCTL_RCGCGPIO_R |=0x10;
+while((SYSCTL_PRGPIO_R & 0x10)== 0);
+GPIO_PORTE_CR_R |= PE0123_mask;
+GPIO_PORTE_DIR_R |= PE0123_mask;
+GPIO_PORTE_DEN_R |= PE0123_mask;
+GPIO_PORTE_AMSEL_R &=~ PE0123_mask;
+GPIO_PORTE_AFSEL_R &=~ PE0123_mask;
+GPIO_PORTE_PCTL_R &=~ 0xffff;	
+GPIO_PORTE_DATA_R &=~ PE0123_mask;	
+}
+
+void Sw2_Init(){
+SYSCTL_RCGCGPIO_R |=0x20;
+while ((SYSCTL_PRGPIO_R &0x20) == 0);
+GPIO_PORTF_LOCK_R =	Lock_key;
+GPIO_PORTF_CR_R |= PF0_mask;
+GPIO_PORTF_DIR_R &=~ PF0_mask;
+GPIO_PORTF_DEN_R |= PF0_mask;
+GPIO_PORTF_AMSEL_R &=~ PF0_mask;
+GPIO_PORTF_AFSEL_R &=~ PF0_mask;
+GPIO_PORTF_PCTL_R &=~ 0xF;	
+GPIO_PORTF_PUR_R |=PF0_mask;	
+}
+
+void Rled_Init(){
+SYSCTL_RCGCGPIO_R |=0x20;
+while ((SYSCTL_PRGPIO_R &0x20) == 0);
+GPIO_PORTF_LOCK_R =	Lock_key;
+GPIO_PORTF_CR_R |= PF1_mask;
+GPIO_PORTF_DIR_R |= PF1_mask;
+GPIO_PORTF_DEN_R |= PF1_mask;
+GPIO_PORTF_AMSEL_R &=~ PF1_mask;
+GPIO_PORTF_AFSEL_R &=~ PF1_mask;
+GPIO_PORTF_PCTL_R &=~ 0xf0;	
+GPIO_PORTF_DATA_R &=~ PF1_mask;	
+	
+}
+
+void UART_Init(void){                                                //should be called only once
+	SYSCTL_RCGCUART_R |= 0x0004;                                    //activate UART2
+	SYSCTL_RCGCGPIO_R |= 0x0008;                                    //activate port D
+	UART2_CTL_R &=~ 0x0001;                                         //disable UART
+        UART2_IBRD_R =104;                                             //IBRD= int (16000000/(16*9600))=104
+	UART2_FBRD_R =11;                                             //FBRD = int(0.1667*64+0.5) =11
+	UART2_LCRH_R= 0x0070;                                           //8-bits word length,enable fifo 001110000
+        UART2_CTL_R =0x0301;                                            //enable RXE,TXE and UART 001100000001
+	
+        GPIO_PORTD_AFSEL_R |= 0xC0;                                     //ENABLE ALTERNATE FUNCTION PD6,PD7
+        GPIO_PORTD_PCTL_R =(GPIO_PORTD_PCTL_R & 0x00FFFFFF)|0x11000000; //CONFIGURE UART FOR PD6,PD7
+        GPIO_PORTD_DEN_R |= 0xC0;                                       //enable digital i/o for PD6,PD7
+        GPIO_PORTD_AMSEL_R &=~0xC0;                                     //disable analog i/o for PD6,PD7
+}
+
+
+
+void portF_init(void) {
+    int delay;
+    SYSCTL_RCGCGPIO_R |= 0x20;
+    delay = 1;
+    GPIO_PORTF_LOCK_R = 0X4C4F434B;
+    GPIO_PORTF_AFSEL_R = 0;
+    GPIO_PORTF_PCTL_R = 0;
+    GPIO_PORTF_AMSEL_R = 0;
+    GPIO_PORTF_DEN_R = 0X1F;
+    GPIO_PORTF_DIR_R = 0X0E;
+    GPIO_PORTF_PUR_R = 0X11;
+
+}
+
+
+void one_second_delay()
+{
+    NVIC_ST_CTRL_R = 0;  //DISABLE TIMER
+    NVIC_ST_RELOAD_R = 16000000;
+    NVIC_ST_CURRENT_R = 0;  // clears the current register and the count flag
+    NVIC_ST_CTRL_R = 5;  // set the enable and clock source to 1
+    
+    if ( (NVIC_ST_CTRL_R & 0x10000) == 0) { }
+}
+
+
+
+// this function makes more than one second delay.
+void delay_in_seconds(int seconds)
+{
+    int i;
+    for (i=0; i<seconds; i++){
+        one_second_delay();
+    }
+}
+
+
+int availble(){
+	return ((UART2_FR_R  & (1<<4)) ==0)?1:0;
+}
+char readChar(){
+	while(availble()!=1);
+	return UART2_DR_R & 0xFF;
+}
+char str[MAX];
+char* readStr(){
+	
+	UART2_CTL_R|=0x301;
+	char cstr;
+	int valid=1;
+  while(valid==1){
+	while(readChar()!='$'){};
+  str[0]='$';
+	if(readChar()=='G'){
+    str[1]='G';
+		if(readChar()=='p'){
+      str[2]='p';
+			if(readChar()=='G'){
+        str[3]='G';
+				if(readChar()=='G'){
+          str[4]='G';
+					if(readChar()=='A'){
+                        str[5]='A';
+                        valid=0;
+                        for(int i=6;i<MAX;i++){
+		                    cstr=readChar();
+		                    if(cstr=='\n' || cstr=='\r')
+		                        break;
+		                    else
+			                    str[i]=cstr;
+
+					             }
+				}
+			}
+		}
+	}
+     
+
+}
+}
+UART2_CTL_R|=0x001;
+return str;
+}
+
+
+char lat[9] ;
+char lng[10] ;
+
+void parseLat (char string[MAX]){
+	
+	for(int i = 0; i < strlen(string); i++){
+		if(string[i] == 'N' || string[i] == 'S'){
+			for(int j = i-2; j >= 0; j--){
+				if(string[j] == ',' ){
+					int x = 0;
+					for(int k = j+1; k < j+10; k++){
+						lat[x] = string[k];
+						x++;
+					}
+					break;
+				}
+				
+			}
+			
+		}
+		else {
+			continue;
+		}
+		break;
+	}
+	
+}
+
+char latDir(char string[MAX]){
+	char x;
+	for(int i = 0; i < strlen(string); i++){
+		if(string[i] == 'N' || string[i] == 'S'){
+			x = string[i];
+			break;
+		}
+	}
+	return x;
+
+}
+
+char lngDir(char string[MAX]){
+	char x;
+	for(int i = 0; i < strlen(string); i++){
+		if(string[i] == 'W' || string[i] == 'E'){
+			x = string[i];
+			break;
+		}
+	}
+	return x;
+
+}
+
+void parseLng (char string[MAX]){
+	
+	for(int i = 0; i < strlen(string); i++){
+		if(string[i] == 'E' || string[i] == 'W'){
+			for(int j = i-2; j >= 0; j--){
+				if(string[j] == ',' ){
+					int x = 0;
+					for(int k = j+1; k < j+11; k++){
+						lng[x] = string[k];
+						x++;
+						
+					}
+					break;
+				}
+				
+			}
+			
+		}
+		else {
+			continue;
+		}
+		break;
+	}
+	
+}
+
+double GPS_decimal( char format[], char dir)
+{
+    int k;
+    double value = 0;
+    char deg[k];
+    
+    if (strlen(format) > 5)
+    {
+        if (format[4] == '.') {
+            k = 2;          
+        }
+        else {
+            k = 3;           
+        }
+    }
+    
+    
+    for (int i = 0; i < k;i++) {
+        deg[i] = format[i];
+    }
+    int degree = atoi(deg);      //the integer part
+    
+    
+    char fl[strlen(format)-k];
+    int j = 0;
+    for (int i = k; i < strlen(format);i++) {
+        
+        fl[j] = format[i];
+        j++;
+    }
+		
+		
+    double f = atof(fl);      //the floating part
+    
+    
+    value = degree + (f / 60);         //finally the double value of GPS reading
+    
+    // to consider the direction
+    if (dir == 'W' || dir == 'S')
+        value = -value;
+
+    return value;
+}
+
+double degToRad(double deg) {
+  return deg * PI / 180;
+}
+
+
+
+////////// this function calulate the distance between two GPS points /////////////
+double distance(double latitude1, double longitude1, double latitude2 ,double longitude2) {
+
+  double a =  pow(sin(degToRad(latitude2-latitude1)/2),2)+
+	  pow(sin(degToRad(longitude2-longitude1)/2),2) * cos(degToRad(latitude2) )* cos(degToRad(latitude1)); 
+  double c = 2 * atan2(sqrt(a),sqrt(1-a));
+  return 6371 * c;
+}
+////////////////// calculate the total distance ////////////
+void total_distance(){
+    delay_in_seconds(30);//delay for GPS fix
+    double total_distance = 0;
+    char* first = readStr();     //To read the start point of the jurney {latitude1 , longitude1}
+	parseLat (first);
+	parseLng (first);
+	double lat1=GPS_decimal( lat , latDir(first));
+	double lon1=GPS_decimal( lng  , lngDir(first));
+    // int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1};
+    while ( (GPIO_PORTF_DATA_R & 0x01) != 0)
+        {
+			char* second = readStr();
+			parseLat (second);
+	        parseLng (second);
+	        double lat2=GPS_decimal( lat , latDir(second));
+	        double lon2=GPS_decimal( lng  , lngDir(second));
+            // string end = read();
+            // int second_point[1] = parse(end);  //int second_point[1] = {lat2, lon2};
+            total_distance += distance(lat1, lon1,lat2,lon2); // increment the total distance
+	        //print((int)total_distance);//to display the distance in 7 segment during the movement
+	        //led(total_distance);// if total_distance>=100, the red led turns on
+
+            // Let the second point to be the first point in the next cycle of the loop
+            lat1 = lat2;
+            lon1 = lon2;
+            delay_in_seconds(5);
+        }
+
+}
+
+unsigned int mask(unsigned int no){
+unsigned int x;
+	if(no == 0){
+		x = 0xc0;
+	}
+	else if(no == 1){
+		x = 249;
+	}
+	else if(no == 2){
+		x = 164;
+	}
+	else if(no == 3){
+		x = 176;
+	}
+	else if(no == 4){
+		x = 153;
+	}
+	else if(no == 5){
+		x = 146;
+	}
+	else if(no == 6){
+		x = 130;
+	}
+	else if(no == 7){
+		x = 248;
+	}
+	else if(no == 8){
+		x = 128;
+	}
+	else if(no == 9){
+		x = 246;
+	}					
+	return x;
+}
+
+
+unsigned int i;
+// check the 7 segment transition
+//void delay(void){
+  //for( i = 0; i < 1250/10; i++){
+  //} 
+//}
+
+unsigned int digit1;
+unsigned int digit2;
+unsigned int digit3;
+unsigned int mask1;
+unsigned int mask2;
+unsigned int mask3;
+
+void print(int distance){
+	if(distance >= 100 && distance <1000){
+	digit1 = distance/100;
+	distance %= 100;
+	mask1 = mask(digit1);
+
+	}
+	if(distance >= 10){
+	digit2 = distance/10;
+	distance %= 10;
+	mask2 = mask(digit2);
+
+	}
+
+	digit3 = distance;
+	mask3 = mask(digit3);
+	
+	while(1){
+		GPIO_PORTB_DATA_R = mask1;
+		GPIO_PORTE_DATA_R &= ~0x0f;
+		GPIO_PORTE_DATA_R |= 0x01;
+	//	delay();
+		
+		GPIO_PORTB_DATA_R = mask2;
+		GPIO_PORTE_DATA_R &= ~0x0f;
+		GPIO_PORTE_DATA_R |= 0x02;
+		//delay();
+		
+		GPIO_PORTB_DATA_R = mask3;
+		GPIO_PORTE_DATA_R &= ~0x0f;
+		GPIO_PORTE_DATA_R |= 0x04;
+		//delay();
+	}
+	
+}
+void led (double distance){ 
+    if (distance >=100){  
+          (GPIO_PORTF_DATA_R |=0X02);
+						
+			}
+}
+
+
+void SystemInit(){}
+
+
+int main(){
+SCB->CPACR|=((3UL<<10*2)|(3UL<<11*2-2));	
+Rled_Init();	
+Sw2_Init();
+PortB_Init();
+PortE_Init();
+UART_Init();
+	
+
+//total_distance();
+	 delay_in_seconds(30);//delay for GPS fix
+    double total_distance = 0;
+    char* first = readStr();     //To read the start point of the jurney {latitude1 , longitude1}
+	parseLat (first);
+	parseLng (first);
+	double lat1=GPS_decimal( lat , latDir(first));
+	double lon1=GPS_decimal( lng  , lngDir(first));
+	UART0_Write(lat1);
+    // int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1};
+    while ( (GPIO_PORTF_DATA_R & 0x01) != 0)
+        {
+			char* second = readStr();
+			parseLat (second);
+	        parseLng (second);
+	        double lat2=GPS_decimal( lat , latDir(second));
+	        double lon2=GPS_decimal( lng  , lngDir(second));
+            // string end = read();
+            // int second_point[1] = parse(end);  //int second_point[1] = {lat2, lon2};
+            total_distance += distance(lat1, lon1,lat2,lon2); // increment the total distance
+	        print((int)total_distance);//to display the distance in 7 segment during the movement
+	        led(total_distance);// if total_distance>=100, the red led turns on
+
+            // Let the second point to be the first point in the next cycle of the loop
+            lat1 = lat2;
+            lon1 = lon2;
+            delay_in_seconds(5);
+        }
+				
+}
