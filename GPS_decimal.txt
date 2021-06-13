@@ -17,10 +17,14 @@ double GPS_decimal( char* format, char dir)
             k = 3;           
         }
     }
+    
+    
     for (int i = 0; i < k;i++) {
         deg[i] = format[i];
     }
-    int degree = atoi(deg);
+    int degree = atoi(deg);      //the integer part
+    
+    
     char fl[strlen(format)-k];
     int j = 0;
     for (int i = k; i < strlen(format);i++) {
@@ -28,14 +32,19 @@ double GPS_decimal( char* format, char dir)
         fl[j] = format[i];
         j++;
     }
-    double f = atof(fl);
+    double f = atof(fl);      //the floating part
     
-    value = degree + (f / 60);
+    
+    value = degree + (f / 60);         //finally the double value of GPS reading
+    
+    // to consider the direction
     if (dir == 'W' || dir == 'S')
         value = -value;
 
     return value;
 }
+
+
 int main () {
    printf("%f", GPS_decimal("10036.1057",'W'));
 
