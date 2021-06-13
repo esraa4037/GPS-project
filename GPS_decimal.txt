@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
+
+double GPS_decimal( char* format, char dir)
+{
+    int k;
+    double value = 0;
+    char deg[k];
+    
+    if (strlen(format) > 5)
+    {
+        if (format[4] == '.') {
+            k = 2;          
+        }
+        else {
+            k = 3;           
+        }
+    }
+    for (int i = 0; i < k;i++) {
+        deg[i] = format[i];
+    }
+    int degree = atoi(deg);
+    char fl[strlen(format)-k];
+    int j = 0;
+    for (int i = k; i < strlen(format);i++) {
+        
+        fl[j] = format[i];
+        j++;
+    }
+    double f = atof(fl);
+    
+    value = degree + (f / 60);
+    if (dir == 'W' || dir == 'S')
+        value = -value;
+
+    return value;
+}
+int main () {
+   printf("%f", GPS_decimal("10036.1057",'W'));
+
+   return(0);
+}
