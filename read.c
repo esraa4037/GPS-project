@@ -48,7 +48,7 @@ char* readStr(){
 }
 UART2_CTL_R|=0x001;
 return str;
-
+}
 
 
 
