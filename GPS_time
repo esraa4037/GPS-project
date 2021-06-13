@@ -1,0 +1,39 @@
+int GPS_time( char* format)
+{ 
+		char  str[MAX];
+    int k=2;
+    
+    char hr[2];
+	  char min[2];
+	  char sec[2];
+    double h;
+	  int hour;
+    double m;
+	  int minute;
+    double s;
+	  int second;
+	  int time;
+    
+    for (int i = 0; i < k;i++) {
+        hr[i] = format[i];
+    }
+    h=strtod(str,&format);
+		hour=(int)h;
+	
+    
+		for (int i = 0; i < k;i++) {
+        min[i] = format[i];
+    }
+    m=strtod(str,&format);
+		minute=(int)m;
+		  
+		for (int i = 0; i < k;i++) {
+        sec[i] = format[i];
+    }
+    s=strtod(str,&format);
+		second=(int)s;
+		 
+		time = hour*3600+minute*60+second ;
+		return time;
+		
+	}
