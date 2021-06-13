@@ -1,0 +1,19 @@
+int starttime(){
+	    int starttime;
+
+			 starttime = GPS_time(str);
+		   return starttime;
+	}
+	
+	  
+int endtime(){
+		int endtime;
+	  if ( (GPIO_PORTF_DATA_R & 0x01) == 0)
+        {  endtime = GPS_time(str);}
+				return endtime;
+}
+ int travei_time(){
+    int traveltime;
+     traveltime = endtime - starttime;
+     return traveltime;
+}
