@@ -1,0 +1,4 @@
+ int travelspeed(){
+    int travelspeed;
+     travelspeed = distance()/traveltime;
+}
