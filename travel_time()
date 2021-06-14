@@ -14,6 +14,8 @@ int endtime(){
 }
  int travei_time(){
     int traveltime;
-     traveltime = endtime - starttime;
+    int e=endtime();
+    int s=starttime();
+     traveltime = e-s;
      return traveltime;
 }
