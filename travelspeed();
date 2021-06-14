@@ -1,6 +1,6 @@
  double travelspeed(){
     double travelspeed;
-    int t=travel_time();
+    int t=travei_time();
      travelspeed = d/t;
      return travelspeed;
 }
