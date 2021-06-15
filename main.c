@@ -10,7 +10,8 @@ UART_Init();
 //total_distance();
 	 delay_in_seconds(30);//delay for GPS fix
     double total_distance = 0;
-    char* first = readStr();     //To read the start point of the jurney {latitude1 , longitude1}
+    char* first = readStr();    //To read the start point of the jurney {latitude1 , longitude1}
+	st=GPS_time(first);
 	parseLat (first);
 	parseLng (first);
 	double lat1=GPS_decimal( lat , latDir(first));
@@ -19,6 +20,7 @@ UART_Init();
     while ( (GPIO_PORTF_DATA_R & 0x01) != 0)
         {
 			char* second = readStr();
+	       en=GPS_time(second);
 			parseLat (second);
 	        parseLng (second);
 	        double lat2=GPS_decimal( lat , latDir(second));
@@ -34,5 +36,6 @@ UART_Init();
             lon1 = lon2;
             delay_in_seconds(5);
         }
+	speed=travelspeed();
 				
 }
