@@ -22,7 +22,7 @@ void one_second_delay()
     NVIC_ST_CURRENT_R = 0;  // clears the current register and the count flag
     NVIC_ST_CTRL_R = 5;  // set the enable and clock source to 1
     
-    if ( (NVIC_ST_CTRL_R & 0x10000) == 0) { }
+    While ( (NVIC_ST_CTRL_R & 0x10000) == 0) { }
 }
 
 
