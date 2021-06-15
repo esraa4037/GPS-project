@@ -15,7 +15,6 @@ UART_Init();
 	parseLng (first);
 	double lat1=GPS_decimal( lat , latDir(first));
 	double lon1=GPS_decimal( lng  , lngDir(first));
-	UART0_Write(lat1);
     // int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1};
     while ( (GPIO_PORTF_DATA_R & 0x01) != 0)
         {
