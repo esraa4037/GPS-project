@@ -12,10 +12,9 @@ int endtime(){
         {  endtime = GPS_time(str);}
 				return endtime;
 }
+int st,en;
  int travei_time(){
     int traveltime;
-    int e=endtime();
-    int s=starttime();
-     traveltime = e-s;
+    traveltime=en-st;
      return traveltime;
 }
