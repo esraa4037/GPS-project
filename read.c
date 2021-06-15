@@ -13,30 +13,29 @@ char readChar(){
 }
 char str[MAX];
 char* readStr(){
-	UART2_CTL_R|=0x301;
-	
+	UART2_CTL_R|=0x301;	
 	char cstr;
 	int valid=1;
-  while(valid==1){
-	while(readChar()!='$'){};
-  str[0]='$';
-	if(readChar()=='G'){
-    str[1]='G';
+        while(valid==1){
+	    while(readChar()!='$'){};
+            str[0]='$';
+	   if(readChar()=='G'){
+                 str[1]='G';
 		if(readChar()=='p'){
-      str[2]='p';
-			if(readChar()=='G'){
-        str[3]='G';
-				if(readChar()=='G'){
-          str[4]='G';
-					if(readChar()=='A'){
-                        str[5]='A';
-                        valid=0;
-                        for(int i=6;i<MAX;i++){
-		                    cstr=readChar();
-		                    if(cstr=='\n' || cstr=='\r')
-		                        break;
-		                    else
-			                    str[i]=cstr;
+                       str[2]='p';
+		       if(readChar()=='G'){
+                             str[3]='G';
+			     if(readChar()=='G'){
+                                     str[4]='G';
+				     if(readChar()=='A'){
+                                           str[5]='A';
+                                           valid=0;
+                                           for(int i=6;i<MAX;i++){
+		                                cstr=readChar();
+		                                 if(cstr=='\n' || cstr=='\r')
+		                                           break;
+		                                 else
+			                                  str[i]=cstr;
 
 					             }
 				}
