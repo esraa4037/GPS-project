@@ -11,7 +11,7 @@ char readChar(){
 	while(availble()!=1);
 	return UART2_DR_R & 0xFF;
 }
-char str[MAX];
+char str[MAX];//global variable 
 char* readStr(){
 	UART2_CTL_R|=0x301;	
 	char cstr;
