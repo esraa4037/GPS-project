@@ -16,58 +16,32 @@ double distance(double latitude1, double longitude1, double latitude2 ,double lo
 }
 ////////////////// calculate the total distance ////////////
 void total_distance(){
-    delay();//delay for GPS fix
+ delay_in_seconds(30);//delay for GPS fix
     double total_distance = 0;
-    char start[] = read();     //To read the start point of the jurney {latitude1 , longitude1}
-    int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1};
+    char* first = readStr();     //To read the start point of the jurney {latitude1 , longitude1}
+	parseLat (first);
+	parseLng (first);
+	double lat1=GPS_decimal( lat , latDir(first));
+	double lon1=GPS_decimal( lng  , lngDir(first));
+	UART0_Write(lat1);
+    // int startPoin[1] = parse(start);  //int startPoin[1] = {lat1, lon1};
     while ( (GPIO_PORTF_DATA_R & 0x01) != 0)
         {
-            string end = read();
-            int second_point[1] = parse(end);  //int second_point[1] = {lat2, lon2};
-            total_distance += distance(startPoin[0], startPoin[1],
-                                       second_point[0], second_point[1] ); // increment the total distance
-	    print((int)total_distance);//to display the distance in 7 segment during the movement
-	    led(total_distance);// if total_distance>=100, the red led turns on
+			char* second = readStr();
+			parseLat (second);
+	        parseLng (second);
+	        double lat2=GPS_decimal( lat , latDir(second));
+	        double lon2=GPS_decimal( lng  , lngDir(second));
+            // string end = read();
+            // int second_point[1] = parse(end);  //int second_point[1] = {lat2, lon2};
+            total_distance += distance(lat1, lon1,lat2,lon2); // increment the total distance
+	        print((int)total_distance);//to display the distance in 7 segment during the movement
+	        led(total_distance);// if total_distance>=100, the red led turns on
 
             // Let the second point to be the first point in the next cycle of the loop
-            startPoin[0] = second_point[0];
-            startPoin[1] = second_point[1];
-            delay();
+            lat1 = lat2;
+            lon1 = lon2;
+            delay_in_seconds(5);
         }
-
+				
 }
-
-
-int main () {
-	 total_distance();  // this will invoke the print() function and led()
-   return(0);
-}
-
-
-
-////////////These functions will be implemented in the second milestone /////////
-/////////////////////////////////////////////////////////////////////////////////
-/*
- *
- // A function reads from gps
-char* read(){
-  string d="";
-  //////
-  //////
-  }
-  return d;
-  }
-
-
- //this function takes the string from function read()
- //and then return langitude and longitude in int array (size: 2)
-  int * parse(string s){
-  ///////
-  ///////
-  return arr;
-    }
-
-
-
-
-*/
