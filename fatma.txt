@@ -376,10 +376,10 @@ unsigned int x;
 
 unsigned int i;
 // check the 7 segment transition
-//void delay(void){
-  //for( i = 0; i < 1250/10; i++){
-  //} 
-//}
+void delay(void){
+  for( i = 0; i < 1250/10; i++){
+  } 
+}
 
 unsigned int digit1;
 unsigned int digit2;
@@ -409,17 +409,17 @@ void print(int distance){
 		GPIO_PORTB_DATA_R = mask1;
 		GPIO_PORTE_DATA_R &= ~0x0f;
 		GPIO_PORTE_DATA_R |= 0x01;
-	//	delay();
+		delay();
 		
 		GPIO_PORTB_DATA_R = mask2;
 		GPIO_PORTE_DATA_R &= ~0x0f;
 		GPIO_PORTE_DATA_R |= 0x02;
-		//delay();
+		delay();
 		
 		GPIO_PORTB_DATA_R = mask3;
 		GPIO_PORTE_DATA_R &= ~0x0f;
 		GPIO_PORTE_DATA_R |= 0x04;
-		//delay();
+		delay();
 	}
 	
 }
