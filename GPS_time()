@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+
+
+#include<string.h>
+#define MAX 200
+char  str[MAX];
+void SystemInit(){}
+	int GPS_time( char* format)
+{ 
+		
+    int k=2;
+    
+    char hr[2];
+	  char min[2];
+	  char sec[2];
+    
+	  int hour;
+   
+	  int minute;
+    
+	  int second;
+	  int time;
+    
+    for (int i = 0; i < k;i++) {
+        hr[i] = format[i];
+    }
+		hour = atoi(hr);
+
+	
+    int j=0;
+		for (int i = 0; i < k;i++) {
+        min[j++] = format[i+2];
+    }
+		minute=atoi(min);
+
+		 int n=0; 
+		for (int i = 0; i < k;i++) {
+        sec[n++] = format[i+4];
+    }
+
+		second=atoi(sec);
+		 
+		time = (hour*3600)+(minute*60)+second ;
+		return time;
+		
+	}
+int main(){
+int t = GPS_time("123456");
+	printf("%d",t);           //output:45296
+	return 0;
+
+}
