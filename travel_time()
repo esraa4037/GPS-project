@@ -1,7 +1,7 @@
 int starttime(){
 	    int starttime;
 
-			 starttime = GPS_time(str);
+			 starttime = GPS_time(start);
 		   return starttime;
 	}
 	
@@ -9,7 +9,7 @@ int starttime(){
 int endtime(){
 		int endtime;
 	  if ( (GPIO_PORTF_DATA_R & 0x01) == 0)
-        {  endtime = GPS_time(str);}
+        {  endtime = GPS_time(end);}
 				return endtime;
 }
 int st,en;
