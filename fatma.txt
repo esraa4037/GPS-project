@@ -146,6 +146,7 @@ char* readStr(){
 				     if(readChar()=='A'){
                                            str[5]='A';
                                            valid=0;
+					   GPIO_PORTF_DATA_R |=0X04;
                                            for(int i=6;i<MAX;i++){
 		                                cstr=readChar();
 		                                 if(cstr=='\n' || cstr=='\r')
